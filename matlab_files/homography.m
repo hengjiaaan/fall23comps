@@ -7,11 +7,6 @@ H = estimate_homography(ratlas_pts, stain_pts);
 nr = size(stain, 1);
 nc = size(stain, 2);
 canvas = uint8(zeros(3*nr, 3*nc, 3));
-canvas(nr:2*nr-1, nc:2*nc-1, :) = stain;
-
-%keble pixel shift
-%row =+ nr;
-%col =+ nc;
 
 
 int = 0;
@@ -33,16 +28,21 @@ for y=1:1:height(ratlas)
         p2_col = p2(1);
 
 
-        %keble pixel shift
+        %pixel shift to center of the canvas
         p2_row = p2_row + nr;
         p2_col = p2_col + nc;
+   
 
+        % for debugging purposes
+        % to know when and where homography matrix calls
+        % a nonexistent pixel (out of index)
         a_1 = 0;
         a_2 = 0;
         a_3 = 0;
         a_4 = 0;
         
-        %'splashing technique'          
+        %'splashing technique' that in cases when a pixel's value must 
+        % expand into neighboring pixels if stretching occurs
         canvas(floor(p2_row), floor(p2_col),:) = ratlas(y,x,:);
         a_1 = 1;
         canvas(floor(p2_row), ceil(p2_col),:) = ratlas(y,x,:);
